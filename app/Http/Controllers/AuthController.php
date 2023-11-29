@@ -58,6 +58,7 @@ class AuthController extends Controller
         $user = User::getEmailSingle($req->email);
         if (!empty($user)) {
             $user->remember_token = Str::random(30);
+            $user->save();
             Mail::to($user->email)->send(new ForgotPasswordMail($user));
 
             return redirect()->back()->with('success', 'Please check your email and reset your password');

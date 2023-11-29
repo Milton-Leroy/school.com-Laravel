@@ -23,7 +23,7 @@
     </div>
     <div class="card-body">
       @include('message')
-      <form action="reset" method="post">
+      <form action="" method="post">
        {{  csrf_field() }}
         <div class="input-group mb-3">
           <input type="password" class="form-control" name="password" required placeholder="Enter new password">
