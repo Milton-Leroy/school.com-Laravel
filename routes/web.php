@@ -3,7 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\AdminContoller;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -27,13 +27,12 @@ Route::post('forgot-password', [AuthController::class, 'PostForgotpassword']);
 Route::get('reset/{token}', [AuthController::class, 'reset']);
 Route::post('reset/{token}', [AuthController::class, 'PasswordReset']);
 
-Route::get('admin/admin/list', function () {
-    return view('admin.admin.list');
-});
-
 Route::group(['middleware' => 'admin'], function () {
 
     Route::get('admin/dashboard', [DashboardController::class, 'dashboard']);
+    Route::get('admin/admin/list', [AdminContoller::class, 'list']);
+    Route::get('admin/admin/add', [AdminContoller::class, 'add']);
+    Route::post('admin/admin/add', [AdminContoller::class, 'insert']);
 
 });
 
