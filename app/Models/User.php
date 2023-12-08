@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -43,19 +42,35 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    static public function getEmailSingle($email){
+    public static function getEmailSingle($email)
+    {
         return User::where('email', '=', $email)->first();
     }
 
-    static public function getAdmin(){
-        return self::select('users.*')
-                        ->where('user_types', '=', 1)
-                        ->orderBy('id', 'asc')
-                        ->get();
+    public static function getAdmin()
+    {
+        $query = self::select('users.*')
+            ->where('user_types', '=', 1)
+            ->where('is_deleted', '=', 0);
+
+        if (!empty(request()->get('email'))) {
+            $query = $query->where('email', 'like', '%' . request()->get('email') . '%');
+        }
+
+        if (!empty(request()->get('name'))) {
+            $query = $query->where('name', 'like', '%' . request()->get('name') . '%');
+        }
+
+        return $query->orderBy('id', 'asc')->paginate(10);
     }
 
-    static public function getTokenSingle($remember_token){
-        return User::where('remember_token', '=',$remember_token)->first();
+    public static function getSingle($id)
+    {
+        return self::find($id);
     }
-    
+
+    public static function getTokenSingle($remember_token)
+    {
+        return User::where('remember_token', '=', $remember_token)->first();
+    }
 }
